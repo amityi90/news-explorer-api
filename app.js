@@ -5,10 +5,9 @@ const helmet = require('helmet');
 const { auth, login, createUser } = require('./controllers/auth');
 const { handleErrors } = require('./helpers/errHelpers');
 const { requestLogger, errorLogger } = require('./middlewares/logger');
+require('dotenv').config();
 const crypto = require('crypto');
 const { celebrate, Joi, errors } = require('celebrate');
-const dotenv = require('dotenv').config();
-
 
 
 
@@ -19,6 +18,7 @@ app.use(helmet());
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(requestLogger);
+
 
 app.post('/signup', celebrate({
   body: Joi.object().keys({
