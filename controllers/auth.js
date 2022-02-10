@@ -1,8 +1,9 @@
 const User = require('../models/user');
 const bcrypt = require('bcryptjs');
 const jwt = require('jsonwebtoken');
+require('dotenv').config();
 
-module.exports.login = (req, res) => {
+module.exports.login = (req, res, next) => {
   let userId = "";
   const { email, password } = req.body;
   User.findOne({ email }).select('+password')
@@ -20,13 +21,12 @@ module.exports.login = (req, res) => {
       }
       const token = jwt.sign(
         { _id: userId },
-        'dev-secret',
+        process.env.NODE_ENV === 'production' ? process.env.JWT_SECRET : 'dev-secret',
         { expiresIn: '7d' }
       );
       res.send({ token });
     })
-    .then(users => res.send({ data: users }))
-    .catch(err => res.status(401).send(err));
+    .catch(next);
 };
 
 module.exports.createUser = (req, res) => {
@@ -38,7 +38,13 @@ module.exports.createUser = (req, res) => {
       email
     }))
     .then(user => {
-      res.send({ message: 'created' });
+      if (!user) {
+        next(err);
+      }
+      else {
+        res.send(user);
+      }
+
     })
     .catch(err => next(err));
 };
@@ -57,13 +63,14 @@ module.exports.auth = (req, res, next) => {
   let payload;
 
   try {
-    payload = jwt.verify(token, 'dev-secret');
+    payload = jwt.verify(token, (process.env.NODE_ENV === 'production' ? process.env.JWT_SECRET : 'dev-secret'));
   } catch (err) {
     console.log(token);
 
-    return res
-      .status(403)
-      .send({ message: 'Authorization Required' });
+    err = new Error('Authorization required');
+    err.statusCode = 401;
+
+    next(err);
   }
 
   req.user = payload;

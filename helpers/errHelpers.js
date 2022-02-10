@@ -1,16 +1,3 @@
-switchErrToNum = (err) => {
-  switch (err.name) {
-    case "CastError":
-      return 404;
-      break;
-    case "ValidationError":
-      return 400;
-      break;
-    default:
-      return 500;
-  }
-}
-
 module.exports.throwErrWhenFail = () => {
   const error = new Error("could not found");
   error.statusCode = 404;
@@ -18,7 +5,7 @@ module.exports.throwErrWhenFail = () => {
 }
 
 module.exports.handleErrors = (err, req, res, next) => {
-  err.statusCode = switchErrToNum(err);
+  err.statusCode = err.statusCode ? err.statusCode : 500;
   const { statusCode, message } = err;
   res
     .status(statusCode)

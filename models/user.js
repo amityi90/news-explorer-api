@@ -9,7 +9,7 @@ module.exports.user = new mongoose.Schema({
       validator: (email) => { return validator.isEmail(email); },
       message: props => `${props.value} wrong email`
     },
-    unique: true,
+    unique: true
   },
   password: {
     type: String,
