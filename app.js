@@ -8,8 +8,8 @@ const { requestLogger, errorLogger } = require('./middlewares/logger');
 //require('dotenv').config();
 const crypto = require('crypto');
 const { celebrate, Joi, errors } = require('celebrate');
-const dotenv = require('dotenv');
-const myEnv = dotenv.config();
+import dotenv  from "dotenv";
+dotenv.config();
 
 
 
