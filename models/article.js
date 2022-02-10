@@ -25,18 +25,18 @@ module.exports.article = new mongoose.Schema({
   link: {
     type: String,
     required: true,
-    // validate: {
-    //   validator: (email) => { return validator.isURL(email); },
-    //   message: props => `${props.value} wrong email`
-    // }
+    validate: {
+      validator: (url) => { return validator.isURL(url); },
+      message: props => `${props.value}`
+    }
   },
   image: {
     type: String,
     required: true,
-    // validate: {
-    //   validator: (email) => { return validator.isURL(email); },
-    //   message: props => `${props.value} wrong email`
-    // }
+    validate: {
+      validator: (url) => { return validator.isURL(url); },
+      message: props => `${props.value}`
+    }
   },
   owner: {
     type: String,
