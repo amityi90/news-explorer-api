@@ -6,7 +6,7 @@ const { auth, login, createUser } = require('./controllers/auth');
 const { handleErrors } = require('./helpers/errHelpers');
 const { requestLogger, errorLogger } = require('./middlewares/logger');
 const crypto = require('crypto');
-//const { celebrate, Joi, errors } = require('celebrate');
+const { celebrate, Joi, errors } = require('celebrate');
 
 
 
@@ -19,21 +19,19 @@ app.use(bodyParser.urlencoded({ extended: true }));
 app.use(requestLogger);
 
 
-// app.post('/signup', celebrate({
-//   body: Joi.object().keys({
-//     email: Joi.string().required(),
-//     password: Joi.string().required(),
-//     name: Joi.string().required()
-//   })
-// }), createUser);
-// app.post('/signin', celebrate({
-//   body: Joi.object().keys({
-//     email: Joi.string().required(),
-//     password: Joi.string().required()
-//   })
-// }), login);
-app.post('/signup', createUser);
-app.post('/signin', login);
+app.post('/signup', celebrate({
+  body: Joi.object().keys({
+    email: Joi.string().required(),
+    password: Joi.string().required(),
+    name: Joi.string().required()
+  })
+}), createUser);
+app.post('/signin', celebrate({
+  body: Joi.object().keys({
+    email: Joi.string().required(),
+    password: Joi.string().required()
+  })
+}), login);
 app.use(auth, require('./routes/user'));
 app.use(auth, require('./routes/article'));
 
@@ -45,7 +43,7 @@ app.get('*', (req, res) => {
 
 app.use(errorLogger);
 
-//app.use(errors());
+app.use(errors());
 
 app.use(handleErrors);
 
