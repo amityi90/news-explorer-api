@@ -1,6 +1,5 @@
 const articleRouter = require('express').Router();
 const { getArticles, getOneArticle, createArticle, deleteArticle } = require('../controllers/articles');
-//const { celebrate, Joi } = require('celebrate');
 
 articleRouter.get('/articles', getArticles);
 articleRouter.post('/articles', createArticle);
