@@ -38,7 +38,6 @@ module.exports.createUser = (req, res, next) => {
       email
     })
     .then(user => {
-      console.log(user);
       if (!user) {
         next(err);
       }
