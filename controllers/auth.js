@@ -41,7 +41,7 @@ module.exports.createUser = (req, res, next) => {
         if (!user) {
           const err = new Error('Authorization required');
           err.statusCode = 401;
-          throw err;
+          next(err);
         }
         else {
           user.password = password;
@@ -50,9 +50,10 @@ module.exports.createUser = (req, res, next) => {
       })
       .catch((err) => {
         err.statusCode = 409;
-        throw err;
+        next(err);
       }))
     .catch(err => next(err));
+  next();
 };
 
 module.exports.auth = (req, res, next) => {
