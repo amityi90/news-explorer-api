@@ -29,23 +29,28 @@ module.exports.login = (req, res, next) => {
     .catch(next);
 };
 
-module.exports.createUser = (req, res) => {
+module.exports.createUser = (req, res, next) => {
   const { name, password, email } = req.body;
   bcrypt.hash(password, 10)
     .then(hash => User.create({
       name,
       password: hash,
       email
-    }))
+    })
     .then(user => {
+      console.log(user);
       if (!user) {
         next(err);
       }
       else {
+        user.password = password;
         res.send(user);
       }
-
     })
+      .catch((err) => {
+        err.statusCode = 409;
+        throw err;
+      }))
     .catch(err => next(err));
 };
 
