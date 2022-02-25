@@ -37,15 +37,17 @@ module.exports.createUser = (req, res, next) => {
       password: hash,
       email
     })
-    .then(user => {
-      if (!user) {
-        next(err);
-      }
-      else {
-        user.password = password;
-        res.send(user);
-      }
-    })
+      .then(user => {
+        if (!user) {
+          const err = new Error('Authorization required');
+          err.statusCode = 401;
+          throw err;
+        }
+        else {
+          user.password = password;
+          res.send(user);
+        }
+      })
       .catch((err) => {
         err.statusCode = 409;
         throw err;
@@ -73,7 +75,6 @@ module.exports.auth = (req, res, next) => {
 
     err = new Error('Authorization required');
     err.statusCode = 401;
-
     next(err);
   }
 
