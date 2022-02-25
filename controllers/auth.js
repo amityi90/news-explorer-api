@@ -37,23 +37,14 @@ module.exports.createUser = (req, res, next) => {
       password: hash,
       email
     })
-      .then(user => {
-        if (!user) {
-          const err = new Error('Authorization required');
-          err.statusCode = 401;
-          next(err);
-        }
-        else {
-          user.password = password;
-          res.send(user);
-        }
-      })
       .catch((err) => {
         err.statusCode = 409;
-        next(err);
+        throw err;
       }))
+    .then(user => {
+      res.send({ data: user });
+    })
     .catch(err => next(err));
-  next();
 };
 
 module.exports.auth = (req, res, next) => {
