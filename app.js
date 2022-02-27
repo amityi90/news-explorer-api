@@ -8,6 +8,8 @@ const { requestLogger, errorLogger } = require('./middlewares/logger');
 const crypto = require('crypto');
 const { celebrate, Joi, errors } = require('celebrate');
 const {limiter} = require('./helpers/rateLimit');
+const cors = require('cors');
+
 
 
 
@@ -18,7 +20,11 @@ app.use(helmet());
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(requestLogger);
-app.use(limiter)
+app.use(limiter);
+app.use(cors());
+app.options('*', cors());
+
+
 
 
 app.post('/signup', celebrate({
